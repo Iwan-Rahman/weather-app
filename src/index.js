@@ -37,9 +37,9 @@ async function getWeather(location = 'vancouver'){
   const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=4db0f8caba1f4ca3991200732232512&q='${location}`);
   weatherImg.alt = location;
   const weatherData = await response.json();
-  const weatherCondition = weatherData.current.condition.text;
+  const weatherCondition = weatherData.current.condition.code;
 
-  weatherLabel.textContent = weatherCondition;
+  weatherLabel.textContent = weatherData.current.condition.text;
   weatherImg.alt = `${weatherCondition} image`;
   tempLabel.textContent = `${weatherData.current.temp_c} C`;
   locationLabel.textContent = weatherData.location.name;
@@ -61,22 +61,29 @@ async function getWeather(location = 'vancouver'){
   uvData.textContent = `UV: ${weatherData.current.uv}`;
   
   switch(weatherCondition){
-    case 'Clear':
+    case 1000:
       weatherImg.src = weatherImages.sunny.url;
       break;
-    case 'Overcast':
-    case 'Partly Cloudy':
-    case 'Cloudy':
+    case weatherCondition >= 1003 && weatherCondition <= 1030:
+    case weatherCondition === 1135:
       weatherImg.src = weatherImages.cloudy.url;
       break;
-    case 'Rain':
-    case 'Light rain':
+    case weatherCondition === 1063:
+    case weatherCondition >= 1150 && weatherCondition <= 1153:
+    case weatherCondition >= 1180 && weatherCondition <= 1195:
+    case weatherCondition >= 1240 && weatherCondition <= 1246:
       weatherImg.src = weatherImages.rainy.url;
       break;
-    case 'Snow':
+    case weatherCondition >= 1066 && weatherCondition <= 1072:
+    case weatherCondition >=1114 && weatherCondition <= 1117:
+    case weatherCondition === 1147:
+    case weatherCondition >= 1168 && weatherCondition <= 1171:
+    case weatherCondition >= 1198 && weatherCondition <= 1237:
+    case weatherCondition >= 1249 && weatherCondition <= 1264:
       weatherImg.src = weatherImages.snowy.url;
       break;
-    case 'Storm':
+    case weatherCondition === 1087:
+    case weatherCondition >= 1273 && weatherCondition <= 1282:
       weatherImg.src = weatherImages.stormy.url;
       break;
     default:
