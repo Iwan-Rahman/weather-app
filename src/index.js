@@ -54,7 +54,7 @@ function updateDisplay(weatherData){
   weatherLabel.textContent = weatherData.current.condition.text;
   weatherImg.alt = `${weatherCondition} image`;
   tempLabel.textContent = `${weatherData.current.temp_c} C`;
-  locationLabel.textContent = weatherData.location.name;
+  locationLabel.textContent = `${weatherData.location.name}, ${weatherData.location.country}`;
 
   tempData.textContent = `Temp(C): ${weatherData.current.temp_c}`;
   feelsLikeData.textContent = `Feels Like(C): ${weatherData.current.feelslike_c}`;
@@ -91,7 +91,7 @@ function updateDisplay(weatherData){
 
 
 
-async function getWeather(location = 'vancouver'){
+async function getWeather(location = 'toronto'){
   try{
     const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=4db0f8caba1f4ca3991200732232512&q='${location}`);
     const weatherData = await response.json();
@@ -108,7 +108,9 @@ getWeather();
 const getSearch = (e) => {
   const countryQuery = country.value;
   const cityQuery = city.value; 
-  if(countryQuery !== ''){
+  if(!city.checkValidity()){
+    errorMsg.textContent = 'The City must contain at least 1 character';
+  }else if(countryQuery !== ''){
     getWeather(`${countryQuery}/${cityQuery}`);
   }else{
     getWeather(cityQuery);
