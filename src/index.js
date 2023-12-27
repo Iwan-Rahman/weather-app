@@ -27,8 +27,10 @@ const country = document.querySelector("#country");
 const city = document.querySelector("#city");
 const btnSearch = document.querySelector('input[type="submit"]');
 
+const errorMsg = document.querySelector('#error');
+
 const weatherImages = {
-  'sunny': await fetch('https://media.giphy.com/media/UnyblOs6hGx9Mli7jq/giphy.gif'),
+  'clear': await fetch('https://media.giphy.com/media/UnyblOs6hGx9Mli7jq/giphy.gif'),
   'night': await fetch('https://media.giphy.com/media/MZXCIvPneFNeFF18Cj/giphy.gif'),
   'cloudy': await fetch('https://media.giphy.com/media/VJ5O80tOcyB3LYBIK2/giphy.gif'),
   'rainy': await fetch('https://media.giphy.com/media/Twh6gTAd73n0uoMT5p/giphy.gif'),
@@ -46,14 +48,14 @@ const weatherCodes = {
 }
 
 function updateDisplay(weatherData){
+  errorMsg.textContent = '';
+  
   const weatherCondition = weatherData.current.condition.code;
-
   weatherLabel.textContent = weatherData.current.condition.text;
   weatherImg.alt = `${weatherCondition} image`;
   tempLabel.textContent = `${weatherData.current.temp_c} C`;
   locationLabel.textContent = weatherData.location.name;
 
-  console.log(weatherData);
   tempData.textContent = `Temp(C): ${weatherData.current.temp_c}`;
   feelsLikeData.textContent = `Feels Like(C): ${weatherData.current.feelslike_c}`;
 
@@ -90,11 +92,15 @@ function updateDisplay(weatherData){
 
 
 async function getWeather(location = 'vancouver'){
-  const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=4db0f8caba1f4ca3991200732232512&q='${location}`);
-  weatherImg.alt = location;
-  const weatherData = await response.json();
-  updateDisplay(weatherData);
-
+  try{
+    const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=4db0f8caba1f4ca3991200732232512&q='${location}`);
+    const weatherData = await response.json();
+    if('error' in weatherData) throw weatherData.error.message
+    updateDisplay(weatherData);
+  }
+  catch(err){
+    errorMsg.textContent = err;
+  }
 }
 
 getWeather();
