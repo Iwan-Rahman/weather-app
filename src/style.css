@@ -51,10 +51,18 @@ h1 {
 }
 
 .weather-data {
+  padding: 0.5rem;
+  width: 80%;
   background-color: rgb(238, 232, 170,0.3);
   border-radius: 1rem;
   border: solid 0.2rem palegoldenrod;
-  padding: 1rem;
+}
+
+#weather-data-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px,calc(100vw/6)));
+  gap: 0.5rem;
+  justify-items: center;
 }
 
 .weather-data h4 {
